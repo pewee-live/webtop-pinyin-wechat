@@ -18,8 +18,10 @@ RUN apt update && \
         fonts-wqy-zenhei \
         fonts-noto-cjk \
     && locale-gen zh_CN.UTF-8 en_US.UTF-8 \
-    && apt clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apt purge -y packagekit \
+    && apt autoremove -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -f /usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service
 
 ENV LANG=zh_CN.UTF-8
 ENV LANGUAGE=zh_CN:zh
@@ -27,6 +29,9 @@ ENV LC_ALL=zh_CN.UTF-8
 ENV GTK_IM_MODULE=fcitx
 ENV QT_IM_MODULE=fcitx
 ENV XMODIFIERS="@im=fcitx"
+
+# 解决应用长时间运行后 dbus 导致的内存和性能卡顿问题
+ENV NO_AT_BRIDGE=1
 
 # 在容器启动后由 s6 以 abc 用户执行，不需要再 USER abc
 RUN mkdir -p /defaults/root/.config/fcitx5 && \
