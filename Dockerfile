@@ -5,21 +5,20 @@ USER root
 
 RUN apt update && \
     apt install -y \
-		wget \
-		curl \
-        locales \
-        im-config \
-        fcitx5 \
-        fcitx5-pinyin \
-        fcitx5-chinese-addons \
-        fcitx5-config-qt \
-        fcitx5-configtool \
-        fonts-wqy-microhei \
-        fonts-wqy-zenhei \
-        fonts-noto-cjk \
+    wget \
+    curl \
+    locales \
+    im-config \
+    fcitx5 \
+    fcitx5-pinyin \
+    fcitx5-chinese-addons \
+    fcitx5-config-qt \
+    fcitx5-configtool \
+    fonts-wqy-microhei \
+    fonts-wqy-zenhei \
+    fonts-noto-cjk \
     && locale-gen zh_CN.UTF-8 en_US.UTF-8 \
-    && apt purge -y packagekit \
-    && apt autoremove -y \
+    && apt clean \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service
 
@@ -63,9 +62,9 @@ RUN chmod +x /tmp/installWc.sh && \
 # 根据架构从 GitHub Release 下载 WeChat
 RUN ARCH=$(dpkg --print-architecture) && \
     case "$ARCH" in \
-      amd64)  URL="https://github.com/pewee-live/webtop-pinyin/releases/download/20250819/WeChatLinux_x86_64.deb" ;; \
-      arm64)  URL="https://github.com/pewee-live/webtop-pinyin/releases/download/20250819/WeChatLinux_arm64.deb" ;; \
-      *)      echo "❌ Unsupported architecture: $ARCH" && exit 1 ;; \
+    amd64)  URL="https://github.com/pewee-live/webtop-pinyin/releases/download/20250819/WeChatLinux_x86_64.deb" ;; \
+    arm64)  URL="https://github.com/pewee-live/webtop-pinyin/releases/download/20250819/WeChatLinux_arm64.deb" ;; \
+    *)      echo "❌ Unsupported architecture: $ARCH" && exit 1 ;; \
     esac && \
     wget -O /tmp/wechat.deb "$URL" && \
     apt install -y /tmp/wechat.deb && \
